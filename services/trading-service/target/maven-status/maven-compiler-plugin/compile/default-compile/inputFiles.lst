@@ -1,0 +1,11 @@
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\trading-service\src\main\java\com\agricola\trading\domain\repository\ContratoRepository.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\trading-service\src\main\java\com\agricola\trading\infrastructure\api\HomeController.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\trading-service\src\main\java\com\agricola\trading\infrastructure\persistence\JpaContratoRepository.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\trading-service\src\main\java\com\agricola\trading\infrastructure\persistence\entity\PedidoEntity.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\trading-service\src\main\java\com\agricola\trading\domain\model\Pedido.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\trading-service\src\main\java\com\agricola\trading\TradingApplication.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\trading-service\src\main\java\com\agricola\trading\application\CrearContratoUseCase.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\trading-service\src\main\java\com\agricola\trading\infrastructure\api\ContratoController.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\trading-service\src\main\java\com\agricola\trading\infrastructure\persistence\entity\ContratoEntity.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\trading-service\src\main\java\com\agricola\trading\domain\model\Contrato.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\trading-service\src\main\java\com\agricola\trading\infrastructure\persistence\PostgresContratoRepository.java

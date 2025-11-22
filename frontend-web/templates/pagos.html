@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pagos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>💳 Gestión de Pagos</h1>
+        <div class="nav">
+            <a href="/">🏠 Inicio</a>
+            <a href="/productores">👨‍🌾 Productores</a>
+            <a href="/contratos">📝 Contratos</a>
+            <a href="/envios">🚚 Envíos</a>
+            <a href="/productos">📦 Productos</a>
+            <a href="/pagos">💳 Pagos</a>
+            <a href="/certificaciones">🏆 Certificaciones</a>
+        </div>
+        <div class="card">
+            <h2>Procesar Nuevo Pago</h2>
+            <form method="POST" action="/pagos/crear">
+                <div class="form-group">
+                    <label>ID del Contrato</label>
+                    <input type="text" name="contratoId" required>
+                </div>
+                <div class="form-group">
+                    <label>Monto (COP)</label>
+                    <input type="number" name="monto" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Método de Pago</label>
+                    <select name="metodoPago" required>
+                        <option value="">Seleccione...</option>
+                        <option value="TRANSFERENCIA">Transferencia</option>
+                        <option value="EFECTIVO">Efectivo</option>
+                        <option value="TARJETA">Tarjeta</option>
+                    </select>
+                </div>
+                <button type="submit">Procesar Pago</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

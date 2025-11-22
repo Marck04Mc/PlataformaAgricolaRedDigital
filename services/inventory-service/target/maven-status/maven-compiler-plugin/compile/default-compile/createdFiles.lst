@@ -1,0 +1,10 @@
+com\agricola\inventory\infrastructure\api\InventoryController$RegistrarProductoRequest.class
+com\agricola\inventory\infrastructure\api\InventoryController.class
+com\agricola\inventory\domain\model\ProductoAgricola.class
+com\agricola\inventory\InventoryApplication.class
+com\agricola\inventory\application\RegistrarProductoUseCase.class
+com\agricola\inventory\infrastructure\api\HomeController.class
+com\agricola\inventory\infrastructure\persistence\PostgresProductoAgricolaRepository.class
+com\agricola\inventory\infrastructure\persistence\entity\ProductoAgricolaEntity.class
+com\agricola\inventory\infrastructure\persistence\JpaProductoAgricolaRepository.class
+com\agricola\inventory\domain\repository\ProductoAgricolaRepository.class

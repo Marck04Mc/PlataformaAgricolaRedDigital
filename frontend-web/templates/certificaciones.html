@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Certificaciones</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>🏆 Gestión de Certificaciones</h1>
+        <div class="nav">
+            <a href="/">🏠 Inicio</a>
+            <a href="/productores">👨‍🌾 Productores</a>
+            <a href="/contratos">📝 Contratos</a>
+            <a href="/envios">🚚 Envíos</a>
+            <a href="/productos">📦 Productos</a>
+            <a href="/pagos">💳 Pagos</a>
+            <a href="/certificaciones">🏆 Certificaciones</a>
+        </div>
+        <div class="card">
+            <h2>Registrar Nueva Certificación</h2>
+            <form method="POST" action="/certificaciones/crear">
+                <div class="form-group">
+                    <label>ID del Productor</label>
+                    <input type="text" name="productorId" required>
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Certificación</label>
+                    <select name="tipo" required>
+                        <option value="">Seleccione...</option>
+                        <option value="ORGANICO">Orgánico</option>
+                        <option value="COMERCIO_JUSTO">Comercio Justo</option>
+                        <option value="RAINFOREST">Rainforest Alliance</option>
+                        <option value="GLOBAL_GAP">Global GAP</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>URL del Documento</label>
+                    <input type="url" name="urlDocumento" required>
+                </div>
+                <button type="submit">Registrar Certificación</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,10 @@
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\logistics-service\src\main\java\com\agricola\logistics\domain\model\PuntoControl.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\logistics-service\src\main\java\com\agricola\logistics\LogisticsApplication.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\logistics-service\src\main\java\com\agricola\logistics\domain\model\Envio.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\logistics-service\src\main\java\com\agricola\logistics\infrastructure\persistence\MongoEnvioRepository.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\logistics-service\src\main\java\com\agricola\logistics\infrastructure\persistence\MongoEnvioAdapter.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\logistics-service\src\main\java\com\agricola\logistics\infrastructure\api\LogisticsController.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\logistics-service\src\main\java\com\agricola\logistics\infrastructure\persistence\document\EnvioDocument.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\logistics-service\src\main\java\com\agricola\logistics\application\RegistrarEnvioUseCase.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\logistics-service\src\main\java\com\agricola\logistics\domain\repository\EnvioRepository.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\logistics-service\src\main\java\com\agricola\logistics\infrastructure\api\HomeController.java

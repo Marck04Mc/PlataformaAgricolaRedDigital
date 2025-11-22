@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificaciones - Plataforma Agrícola</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #a8edea;
+        }
+
+        button {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🏆 Gestión de Certificaciones</h1>
+
+        <div class="card">
+            <h2>Registrar Nueva Certificación</h2>
+            <form id="certificationForm">
+                <div class="form-group">
+                    <label for="productorId">ID del Productor</label>
+                    <input type="text" id="productorId" required placeholder="UUID del productor">
+                </div>
+                <div class="form-group">
+                    <label for="tipo">Tipo de Certificación</label>
+                    <select id="tipo" required>
+                        <option value="">Seleccione...</option>
+                        <option value="ORGANICO">Orgánico</option>
+                        <option value="COMERCIO_JUSTO">Comercio Justo</option>
+                        <option value="RAINFOREST">Rainforest Alliance</option>
+                        <option value="GLOBAL_GAP">Global GAP</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="urlDocumento">URL del Documento</label>
+                    <input type="url" id="urlDocumento" required placeholder="https://...">
+                </div>
+                <button type="submit">Registrar Certificación</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Información del Servicio</h2>
+            <p>Este servicio gestiona las certificaciones de calidad de los productores.</p>
+            <p><strong>Estado:</strong> <span style="color: green;">✓ Activo</span></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('certificationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                productorId: document.getElementById('productorId').value,
+                tipo: document.getElementById('tipo').value,
+                urlDocumento: document.getElementById('urlDocumento').value
+            };
+
+            try {
+                const response = await fetch('/api/certificaciones', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('✅ Certificación registrada exitosamente');
+                    document.getElementById('certificationForm').reset();
+                }
+            } catch (error) {
+                alert('❌ Error al registrar certificación');
+            }
+        });
+    </script>
+</body>
+
+</html>

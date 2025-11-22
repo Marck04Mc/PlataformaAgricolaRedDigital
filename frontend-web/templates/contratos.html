@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contratos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>📝 Gestión de Contratos</h1>
+        <div class="nav">
+            <a href="/">🏠 Inicio</a>
+            <a href="/productores">👨‍🌾 Productores</a>
+            <a href="/contratos">📝 Contratos</a>
+            <a href="/envios">🚚 Envíos</a>
+            <a href="/productos">📦 Productos</a>
+            <a href="/pagos">💳 Pagos</a>
+            <a href="/certificaciones">🏆 Certificaciones</a>
+        </div>
+        <div class="card">
+            <h2>Crear Nuevo Contrato</h2>
+            <form method="POST" action="/contratos/crear">
+                <div class="form-group">
+                    <label>ID del Productor</label>
+                    <input type="text" name="productorId" required>
+                </div>
+                <div class="form-group">
+                    <label>ID del Comprador</label>
+                    <input type="text" name="compradorId" required>
+                </div>
+                <div class="form-group">
+                    <label>Términos</label>
+                    <textarea name="terminos" rows="4" required></textarea>
+                </div>
+                <button type="submit">Crear Contrato</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

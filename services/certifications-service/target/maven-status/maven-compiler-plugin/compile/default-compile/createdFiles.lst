@@ -1,0 +1,10 @@
+com\agricola\certifications\CertificationsApplication.class
+com\agricola\certifications\application\RegistrarCertificacionUseCase.class
+com\agricola\certifications\infrastructure\persistence\PostgresCertificacionRepository.class
+com\agricola\certifications\infrastructure\api\HomeController.class
+com\agricola\certifications\domain\model\Certificacion.class
+com\agricola\certifications\domain\repository\CertificacionRepository.class
+com\agricola\certifications\infrastructure\api\CertificationController$RegistrarCertificacionRequest.class
+com\agricola\certifications\infrastructure\api\CertificationController.class
+com\agricola\certifications\infrastructure\persistence\entity\CertificacionEntity.class
+com\agricola\certifications\infrastructure\persistence\JpaCertificacionRepository.class

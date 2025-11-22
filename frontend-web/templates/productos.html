@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Productos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>📦 Gestión de Productos</h1>
+        <div class="nav">
+            <a href="/">🏠 Inicio</a>
+            <a href="/productores">👨‍🌾 Productores</a>
+            <a href="/contratos">📝 Contratos</a>
+            <a href="/envios">🚚 Envíos</a>
+            <a href="/productos">📦 Productos</a>
+            <a href="/pagos">💳 Pagos</a>
+            <a href="/certificaciones">🏆 Certificaciones</a>
+        </div>
+        <div class="card">
+            <h2>Registrar Nuevo Producto</h2>
+            <form method="POST" action="/productos/crear">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <textarea name="descripcion" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Precio (COP)</label>
+                    <input type="number" name="precio" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Cantidad (kg)</label>
+                    <input type="number" name="cantidad" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>ID del Productor</label>
+                    <input type="text" name="productorId" required>
+                </div>
+                <button type="submit">Registrar Producto</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

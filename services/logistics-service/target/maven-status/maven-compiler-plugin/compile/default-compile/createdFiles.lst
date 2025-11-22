@@ -1,0 +1,11 @@
+com\agricola\logistics\domain\model\Envio.class
+com\agricola\logistics\infrastructure\persistence\MongoEnvioAdapter.class
+com\agricola\logistics\infrastructure\persistence\MongoEnvioRepository.class
+com\agricola\logistics\infrastructure\persistence\document\EnvioDocument.class
+com\agricola\logistics\domain\model\PuntoControl.class
+com\agricola\logistics\infrastructure\api\LogisticsController$RegistrarEnvioRequest.class
+com\agricola\logistics\infrastructure\api\LogisticsController.class
+com\agricola\logistics\LogisticsApplication.class
+com\agricola\logistics\application\RegistrarEnvioUseCase.class
+com\agricola\logistics\domain\repository\EnvioRepository.class
+com\agricola\logistics\infrastructure\api\HomeController.class

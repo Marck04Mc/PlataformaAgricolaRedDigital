@@ -1,0 +1,13 @@
+com\agricola\producers\infrastructure\persistence\entity\ProductorEntity.class
+com\agricola\producers\infrastructure\persistence\JpaProductorRepository.class
+com\agricola\producers\infrastructure\api\HomeController.class
+com\agricola\producers\ProducersApplication.class
+com\agricola\producers\application\RegistrarProductorUseCase.class
+com\agricola\producers\domain\model\Finca.class
+com\agricola\producers\domain\repository\ProductorRepository.class
+com\agricola\producers\infrastructure\api\ProductorController$RegistrarProductorRequest.class
+com\agricola\producers\infrastructure\persistence\entity\FincaEntity.class
+com\agricola\producers\infrastructure\persistence\PostgresProductorRepository.class
+com\agricola\producers\infrastructure\api\ProductorController.class
+com\agricola\producers\domain\model\Productor.class
+com\agricola\producers\infrastructure\api\ProductorController$ProductorResponse.class

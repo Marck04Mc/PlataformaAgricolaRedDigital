@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagos - Plataforma Agrícola</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #fa709a;
+        }
+
+        button {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>💳 Gestión de Pagos</h1>
+
+        <div class="card">
+            <h2>Procesar Nuevo Pago</h2>
+            <form id="paymentForm">
+                <div class="form-group">
+                    <label for="contratoId">ID del Contrato</label>
+                    <input type="text" id="contratoId" required placeholder="UUID del contrato">
+                </div>
+                <div class="form-group">
+                    <label for="monto">Monto (COP)</label>
+                    <input type="number" id="monto" step="0.01" required placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label for="metodoPago">Método de Pago</label>
+                    <select id="metodoPago" required>
+                        <option value="">Seleccione...</option>
+                        <option value="TRANSFERENCIA">Transferencia Bancaria</option>
+                        <option value="EFECTIVO">Efectivo</option>
+                        <option value="TARJETA">Tarjeta de Crédito</option>
+                    </select>
+                </div>
+                <button type="submit">Procesar Pago</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Información del Servicio</h2>
+            <p>Este servicio gestiona las transacciones de pago.</p>
+            <p><strong>Estado:</strong> <span style="color: green;">✓ Activo</span></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                contratoId: document.getElementById('contratoId').value,
+                monto: parseFloat(document.getElementById('monto').value),
+                metodoPago: document.getElementById('metodoPago').value
+            };
+
+            try {
+                const response = await fetch('/api/pagos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('✅ Pago procesado exitosamente');
+                    document.getElementById('paymentForm').reset();
+                }
+            } catch (error) {
+                alert('❌ Error al procesar pago');
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,9 @@
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\certifications-service\src\main\java\com\agricola\certifications\CertificationsApplication.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\certifications-service\src\main\java\com\agricola\certifications\domain\repository\CertificacionRepository.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\certifications-service\src\main\java\com\agricola\certifications\infrastructure\persistence\entity\CertificacionEntity.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\certifications-service\src\main\java\com\agricola\certifications\infrastructure\api\HomeController.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\certifications-service\src\main\java\com\agricola\certifications\infrastructure\api\CertificationController.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\certifications-service\src\main\java\com\agricola\certifications\infrastructure\persistence\JpaCertificacionRepository.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\certifications-service\src\main\java\com\agricola\certifications\infrastructure\persistence\PostgresCertificacionRepository.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\certifications-service\src\main\java\com\agricola\certifications\domain\model\Certificacion.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\certifications-service\src\main\java\com\agricola\certifications\application\RegistrarCertificacionUseCase.java

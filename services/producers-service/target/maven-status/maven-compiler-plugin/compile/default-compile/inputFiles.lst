@@ -1,0 +1,11 @@
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\producers-service\src\main\java\com\agricola\producers\infrastructure\api\ProductorController.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\producers-service\src\main\java\com\agricola\producers\application\RegistrarProductorUseCase.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\producers-service\src\main\java\com\agricola\producers\infrastructure\persistence\JpaProductorRepository.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\producers-service\src\main\java\com\agricola\producers\ProducersApplication.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\producers-service\src\main\java\com\agricola\producers\domain\model\Productor.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\producers-service\src\main\java\com\agricola\producers\infrastructure\persistence\PostgresProductorRepository.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\producers-service\src\main\java\com\agricola\producers\infrastructure\persistence\entity\FincaEntity.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\producers-service\src\main\java\com\agricola\producers\infrastructure\api\HomeController.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\producers-service\src\main\java\com\agricola\producers\infrastructure\persistence\entity\ProductorEntity.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\producers-service\src\main\java\com\agricola\producers\domain\model\Finca.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\producers-service\src\main\java\com\agricola\producers\domain\repository\ProductorRepository.java

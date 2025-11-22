@@ -1,0 +1,9 @@
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\inventory-service\src\main\java\com\agricola\inventory\InventoryApplication.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\inventory-service\src\main\java\com\agricola\inventory\application\RegistrarProductoUseCase.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\inventory-service\src\main\java\com\agricola\inventory\domain\model\ProductoAgricola.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\inventory-service\src\main\java\com\agricola\inventory\infrastructure\api\InventoryController.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\inventory-service\src\main\java\com\agricola\inventory\infrastructure\api\HomeController.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\inventory-service\src\main\java\com\agricola\inventory\infrastructure\persistence\entity\ProductoAgricolaEntity.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\inventory-service\src\main\java\com\agricola\inventory\infrastructure\persistence\JpaProductoAgricolaRepository.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\inventory-service\src\main\java\com\agricola\inventory\infrastructure\persistence\PostgresProductoAgricolaRepository.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\inventory-service\src\main\java\com\agricola\inventory\domain\repository\ProductoAgricolaRepository.java

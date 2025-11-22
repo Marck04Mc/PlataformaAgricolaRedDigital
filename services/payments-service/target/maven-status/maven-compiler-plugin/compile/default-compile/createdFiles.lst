@@ -1,0 +1,10 @@
+com\agricola\payments\infrastructure\persistence\JpaTransaccionRepository.class
+com\agricola\payments\application\ProcesarPagoUseCase.class
+com\agricola\payments\domain\repository\TransaccionRepository.class
+com\agricola\payments\infrastructure\persistence\entity\TransaccionEntity.class
+com\agricola\payments\PaymentsApplication.class
+com\agricola\payments\infrastructure\api\HomeController.class
+com\agricola\payments\infrastructure\api\PaymentController$ProcesarPagoRequest.class
+com\agricola\payments\domain\model\Transaccion.class
+com\agricola\payments\infrastructure\api\PaymentController.class
+com\agricola\payments\infrastructure\persistence\PostgresTransaccionRepository.class

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productores - Plataforma Agrícola</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>👨‍🌾 Gestión de Productores</h1>
+
+        <div class="nav">
+            <a href="/">🏠 Inicio</a>
+            <a href="/productores">👨‍🌾 Productores</a>
+            <a href="/contratos">📝 Contratos</a>
+            <a href="/envios">🚚 Envíos</a>
+            <a href="/productos">📦 Productos</a>
+            <a href="/pagos">💳 Pagos</a>
+            <a href="/certificaciones">🏆 Certificaciones</a>
+        </div>
+
+        <div class="card">
+            <h2>Registrar Nuevo Productor</h2>
+            <form method="POST" action="/productores/crear">
+                <div class="form-group">
+                    <label for="nombre">Nombre Completo</label>
+                    <input type="text" id="nombre" name="nombre" required placeholder="Ej: Juan Pérez">
+                </div>
+                <div class="form-group">
+                    <label for="identificacion">Identificación</label>
+                    <input type="text" id="identificacion" name="identificacion" required placeholder="Ej: 123456789">
+                </div>
+                <button type="submit">Registrar Productor</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Productores Registrados</h2>
+            {% if productores %}
+            <div class="grid">
+                {% for p in productores %}
+                <div class="item">
+                    <h3>{{ p.nombre }}</h3>
+                    <p><strong>ID:</strong> {{ p.id }}</p>
+                    <p><strong>Identificación:</strong> {{ p.identificacion }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p style="text-align: center; color: #999; padding: 40px 0;">No hay productores registrados</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>

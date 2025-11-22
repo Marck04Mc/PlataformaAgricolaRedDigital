@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Envíos - Plataforma Agrícola</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+
+        button {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🚚 Gestión de Envíos</h1>
+
+        <div class="card">
+            <h2>Registrar Nuevo Envío</h2>
+            <form id="shipmentForm">
+                <div class="form-group">
+                    <label for="pedidoId">ID del Pedido</label>
+                    <input type="text" id="pedidoId" required placeholder="UUID del pedido">
+                </div>
+                <div class="form-group">
+                    <label for="transportistaId">ID del Transportista</label>
+                    <input type="text" id="transportistaId" required placeholder="UUID del transportista">
+                </div>
+                <button type="submit">Registrar Envío</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Información del Servicio</h2>
+            <p>Este servicio gestiona el seguimiento de envíos y logística.</p>
+            <p><strong>Estado:</strong> <span style="color: green;">✓ Activo</span></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('shipmentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                pedidoId: document.getElementById('pedidoId').value,
+                transportistaId: document.getElementById('transportistaId').value
+            };
+
+            try {
+                const response = await fetch('/api/envios', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('✅ Envío registrado exitosamente');
+                    document.getElementById('shipmentForm').reset();
+                }
+            } catch (error) {
+                alert('❌ Error al registrar envío');
+            }
+        });
+    </script>
+</body>
+
+</html>

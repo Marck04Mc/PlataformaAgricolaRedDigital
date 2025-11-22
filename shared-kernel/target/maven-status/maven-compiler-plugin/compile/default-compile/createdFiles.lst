@@ -1,0 +1,3 @@
+com\agricola\shared\domain\Entity.class
+com\agricola\shared\domain\AggregateRoot.class
+com\agricola\shared\domain\ValueObject.class

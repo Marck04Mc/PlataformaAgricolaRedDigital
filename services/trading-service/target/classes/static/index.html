@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contratos - Plataforma Agrícola</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #f5576c;
+        }
+
+        button {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📝 Gestión de Contratos</h1>
+
+        <div class="card">
+            <h2>Crear Nuevo Contrato</h2>
+            <form id="contractForm">
+                <div class="form-group">
+                    <label for="productorId">ID del Productor</label>
+                    <input type="text" id="productorId" required placeholder="UUID del productor">
+                </div>
+                <div class="form-group">
+                    <label for="compradorId">ID del Comprador</label>
+                    <input type="text" id="compradorId" required placeholder="UUID del comprador">
+                </div>
+                <div class="form-group">
+                    <label for="terminos">Términos del Contrato</label>
+                    <textarea id="terminos" rows="4" required
+                        placeholder="Describe los términos del contrato..."></textarea>
+                </div>
+                <button type="submit">Crear Contrato</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Información del Servicio</h2>
+            <p>Este servicio gestiona los contratos entre productores y compradores.</p>
+            <p><strong>Estado:</strong> <span style="color: green;">✓ Activo</span></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('contractForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                productorId: document.getElementById('productorId').value,
+                compradorId: document.getElementById('compradorId').value,
+                terminos: document.getElementById('terminos').value
+            };
+
+            try {
+                const response = await fetch('/api/contratos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('✅ Contrato creado exitosamente');
+                    document.getElementById('contractForm').reset();
+                }
+            } catch (error) {
+                alert('❌ Error al crear contrato');
+            }
+        });
+    </script>
+</body>
+
+</html>

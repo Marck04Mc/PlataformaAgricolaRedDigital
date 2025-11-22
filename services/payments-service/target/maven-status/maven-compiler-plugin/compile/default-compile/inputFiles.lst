@@ -1,0 +1,9 @@
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\payments-service\src\main\java\com\agricola\payments\infrastructure\persistence\entity\TransaccionEntity.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\payments-service\src\main\java\com\agricola\payments\domain\repository\TransaccionRepository.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\payments-service\src\main\java\com\agricola\payments\infrastructure\api\PaymentController.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\payments-service\src\main\java\com\agricola\payments\infrastructure\persistence\PostgresTransaccionRepository.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\payments-service\src\main\java\com\agricola\payments\PaymentsApplication.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\payments-service\src\main\java\com\agricola\payments\application\ProcesarPagoUseCase.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\payments-service\src\main\java\com\agricola\payments\infrastructure\api\HomeController.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\payments-service\src\main\java\com\agricola\payments\infrastructure\persistence\JpaTransaccionRepository.java
+C:\Users\lican\OneDrive\Documents\Electiva\Plataforma_Agricola\services\payments-service\src\main\java\com\agricola\payments\domain\model\Transaccion.java
