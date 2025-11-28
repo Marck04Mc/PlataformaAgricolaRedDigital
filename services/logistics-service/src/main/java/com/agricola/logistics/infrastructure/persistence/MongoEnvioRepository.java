@@ -2,7 +2,8 @@ package com.agricola.logistics.infrastructure.persistence;
 
 import com.agricola.logistics.infrastructure.persistence.document.EnvioDocument;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import java.util.UUID;
+import org.springframework.stereotype.Repository;
 
-public interface MongoEnvioRepository extends MongoRepository<EnvioDocument, UUID> {
+@Repository
+public interface MongoEnvioRepository extends MongoRepository<EnvioDocument, String> {
 }

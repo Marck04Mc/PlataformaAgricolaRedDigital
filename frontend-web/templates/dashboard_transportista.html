@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Transportista - Plataforma Agrícola</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            margin: 0;
+            color: #667eea;
+            font-size: 2em;
+        }
+
+        .stat-card p {
+            color: #666;
+            margin: 10px 0 0;
+        }
+
+        .action-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-top: 15px;
+            transition: opacity 0.3s;
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <h1>🚚 Panel de Control - Transportista</h1>
+            <div>
+                <span>Bienvenido, {{ current_user.username }}</span>
+                <a href="/logout" class="action-btn" style="background: #ff4757; margin-left: 15px;">Cerrar Sesión</a>
+            </div>
+        </div>
+
+        <div class="nav">
+            <a href="/dashboard/transportista" class="active">📊 Dashboard</a>
+            <a href="/envios">📦 Gestión de Envíos</a>
+            <a href="/contratos">📝 Ver Contratos</a>
+        </div>
+
+        <!-- Resumen de Estadísticas -->
+        <div class="dashboard-grid">
+            <div class="stat-card">
+                <h3>{{ envios|length }}</h3>
+                <p>Envíos Asignados</p>
+                <a href="/envios" class="action-btn">Gestionar Envíos</a>
+            </div>
+            <div class="stat-card">
+                <h3>{{ envios_pendientes }}</h3>
+                <p>Envíos Pendientes</p>
+            </div>
+            <div class="stat-card">
+                <h3>{{ envios_entregados }}</h3>
+                <p>Envíos Entregados</p>
+            </div>
+        </div>
+
+        <!-- Envíos Recientes -->
+        <div class="card">
+            <h2>🚚 Envíos Recientes</h2>
+            {% if envios %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Envío</th>
+                        <th>Pedido</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for envio in envios[:5] %}
+                    <tr>
+                        <td>{{ envio.id }}</td>
+                        <td>{{ envio.pedidoId }}</td>
+                        <td>
+                            <span
+                                style="padding: 5px 10px; border-radius: 15px; 
+                                background: {% if envio.estado == 'ENTREGADO' %}#d4edda{% elif envio.estado == 'EN_TRANSITO' %}#fff3cd{% else %}#f8d7da{% endif %}; 
+                                color: {% if envio.estado == 'ENTREGADO' %}#155724{% elif envio.estado == 'EN_TRANSITO' %}#856404{% else %}#721c24{% endif %};">
+                                {{ envio.estado }}
+                            </span>
+                        </td>
+                        <td><a href="/envios">Actualizar</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p style="text-align: center; color: #999; padding: 20px;">No tienes envíos asignados.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>

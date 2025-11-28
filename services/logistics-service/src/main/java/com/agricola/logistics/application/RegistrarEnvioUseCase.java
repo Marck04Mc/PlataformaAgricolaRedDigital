@@ -9,14 +9,14 @@ import java.util.UUID;
 @Service
 public class RegistrarEnvioUseCase {
 
-    private final EnvioRepository repository;
+    private final EnvioRepository envioRepository;
 
-    public RegistrarEnvioUseCase(EnvioRepository repository) {
-        this.repository = repository;
+    public RegistrarEnvioUseCase(EnvioRepository envioRepository) {
+        this.envioRepository = envioRepository;
     }
 
     public void ejecutar(UUID pedidoId, UUID transportistaId) {
-        Envio envio = new Envio(UUID.randomUUID(), pedidoId, transportistaId);
-        repository.save(envio);
+        Envio envio = new Envio(UUID.randomUUID().toString(), pedidoId, transportistaId);
+        envioRepository.save(envio);
     }
 }

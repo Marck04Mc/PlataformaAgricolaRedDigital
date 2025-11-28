@@ -6,6 +6,8 @@ com\agricola\logistics\domain\model\PuntoControl.class
 com\agricola\logistics\infrastructure\api\LogisticsController$RegistrarEnvioRequest.class
 com\agricola\logistics\infrastructure\api\LogisticsController.class
 com\agricola\logistics\LogisticsApplication.class
+com\agricola\logistics\infrastructure\api\LogisticsController$EnvioResponse.class
 com\agricola\logistics\application\RegistrarEnvioUseCase.class
+com\agricola\logistics\infrastructure\api\LogisticsController$ActualizarEstadoRequest.class
 com\agricola\logistics\domain\repository\EnvioRepository.class
 com\agricola\logistics\infrastructure\api\HomeController.class

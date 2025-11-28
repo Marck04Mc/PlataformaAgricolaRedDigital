@@ -1,6 +1,7 @@
 com\agricola\trading\infrastructure\api\ContratoController$CrearContratoRequest.class
 com\agricola\trading\infrastructure\api\ContratoController.class
 com\agricola\trading\domain\model\Pedido.class
+com\agricola\trading\infrastructure\api\ContratoController$ContratoResponse.class
 com\agricola\trading\application\CrearContratoUseCase.class
 com\agricola\trading\infrastructure\persistence\JpaContratoRepository.class
 com\agricola\trading\infrastructure\api\HomeController.class

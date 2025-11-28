@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Productor - Plataforma Agrícola</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            margin: 0;
+            color: #667eea;
+            font-size: 2em;
+        }
+
+        .stat-card p {
+            color: #666;
+            margin: 10px 0 0;
+        }
+
+        .action-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-top: 15px;
+            transition: opacity 0.3s;
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <h1>👨‍🌾 Panel de Control - Productor</h1>
+            <div>
+                <span>Bienvenido, {{ current_user.username }}</span>
+                <a href="/logout" class="action-btn" style="background: #ff4757; margin-left: 15px;">Cerrar Sesión</a>
+            </div>
+        </div>
+
+        <div class="nav">
+            <a href="/dashboard/productor" class="active">📊 Dashboard</a>
+            <a href="/productos">📦 Mis Productos</a>
+            <a href="/contratos">📝 Contratos</a>
+            <a href="/envios">🚚 Envíos</a>
+            <a href="/certificaciones">🏆 Certificaciones</a>
+        </div>
+
+        <!-- Resumen de Estadísticas -->
+        <div class="dashboard-grid">
+            <div class="stat-card">
+                <h3>{{ productos|length }}</h3>
+                <p>Productos Activos</p>
+                <a href="/productos" class="action-btn">Gestionar Productos</a>
+            </div>
+            <div class="stat-card">
+                <h3>{{ contratos|length }}</h3>
+                <p>Contratos Vigentes</p>
+                <a href="/contratos" class="action-btn">Ver Contratos</a>
+            </div>
+            <div class="stat-card">
+                <h3>{{ envios|length }}</h3>
+                <p>Envíos en Tránsito</p>
+                <a href="/envios" class="action-btn">Rastrear Envíos</a>
+            </div>
+            <div class="stat-card">
+                <h3>{{ certificaciones|length }}</h3>
+                <p>Certificaciones</p>
+                <a href="/certificaciones" class="action-btn">Ver Certificados</a>
+            </div>
+        </div>
+
+        <!-- Actividad Reciente -->
+        <div class="card">
+            <h2>📢 Actividad Reciente</h2>
+            <p>Aquí se mostrarán las últimas notificaciones sobre tus productos y contratos.</p>
+            <!-- Placeholder para futuras notificaciones -->
+            <div style="padding: 20px; background: #f8f9fa; border-radius: 10px; margin-top: 15px;">
+                <p>✅ Has iniciado sesión correctamente.</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

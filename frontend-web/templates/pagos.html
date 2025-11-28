@@ -3,46 +3,224 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Pagos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasarela de Pagos - Plataforma Agrícola</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .payment-container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .payment-form {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .payment-history {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .credit-card-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .card-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .card-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            width: 300px;
+        }
+
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .success-icon {
+            color: #2ecc71;
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>💳 Gestión de Pagos</h1>
+        <h1>💳 Pasarela de Pagos Segura</h1>
         <div class="nav">
-            <a href="/">🏠 Inicio</a>
-            <a href="/productores">👨‍🌾 Productores</a>
-            <a href="/contratos">📝 Contratos</a>
-            <a href="/envios">🚚 Envíos</a>
-            <a href="/productos">📦 Productos</a>
-            <a href="/pagos">💳 Pagos</a>
-            <a href="/certificaciones">🏆 Certificaciones</a>
+            <a href="/dashboard/comprador">⬅ Volver al Dashboard</a>
         </div>
-        <div class="card">
-            <h2>Procesar Nuevo Pago</h2>
-            <form method="POST" action="/pagos/crear">
-                <div class="form-group">
-                    <label>ID del Contrato</label>
-                    <input type="text" name="contratoId" required>
-                </div>
-                <div class="form-group">
-                    <label>Monto (COP)</label>
-                    <input type="number" name="monto" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label>Método de Pago</label>
-                    <select name="metodoPago" required>
-                        <option value="">Seleccione...</option>
-                        <option value="TRANSFERENCIA">Transferencia</option>
-                        <option value="EFECTIVO">Efectivo</option>
-                        <option value="TARJETA">Tarjeta</option>
-                    </select>
-                </div>
-                <button type="submit">Procesar Pago</button>
-            </form>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="payment-container">
+            <!-- Formulario de Pago -->
+            <div class="card payment-form">
+                <h2>Realizar Pago</h2>
+                <form id="paymentForm" method="POST" action="/pagos/crear" onsubmit="return processPayment(event)">
+                    <div class="form-group">
+                        <label>ID del Contrato</label>
+                        <input type="text" name="contratoId" required placeholder="Ej: 50001">
+                    </div>
+                    <div class="form-group">
+                        <label>Monto a Pagar ($)</label>
+                        <input type="number" step="0.01" name="monto" required placeholder="0.00">
+                    </div>
+
+                    <div class="credit-card-form">
+                        <h3><span class="card-icon">💳</span>Datos de la Tarjeta</h3>
+                        <div class="form-group">
+                            <label>Número de Tarjeta</label>
+                            <input type="text" placeholder="0000 0000 0000 0000" maxlength="19" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Titular de la Tarjeta</label>
+                            <input type="text" placeholder="Nombre como aparece en la tarjeta" required>
+                        </div>
+                        <div class="card-row">
+                            <div class="form-group" style="flex: 1;">
+                                <label>Vencimiento</label>
+                                <input type="text" placeholder="MM/YY" maxlength="5" required>
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label>CVV</label>
+                                <input type="password" placeholder="123" maxlength="3" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hidden field for backend compatibility -->
+                    <input type="hidden" name="metodoPago" value="TARJETA">
+
+                    <button type="submit" style="margin-top: 20px; width: 100%;">Pagar Ahora</button>
+                </form>
+            </div>
+
+            <!-- Historial -->
+            <div class="card payment-history">
+                <h2>Historial de Transacciones</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Contrato</th>
+                            <th>Monto</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pago in pagos %}
+                        <tr>
+                            <td>{{ pago.contratoId }}</td>
+                            <td>${{ pago.monto }}</td>
+                            <td>
+                                <span
+                                    style="color: {% if pago.estado == 'APROBADO' %}#2ecc71{% else %}#f1c40f{% endif %}; font-weight: bold;">
+                                    {{ pago.estado }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="3">No hay pagos registrados</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
+    <!-- Modal de Procesamiento -->
+    <div id="processingModal" class="modal">
+        <div class="modal-content">
+            <div id="spinner" class="spinner"></div>
+            <div id="successMessage" style="display: none;">
+                <div class="success-icon">✔</div>
+                <h3>¡Pago Exitoso!</h3>
+                <p>Redirigiendo...</p>
+            </div>
+            <h3 id="statusText">Procesando pago seguro...</h3>
+            <p id="subText">Por favor no cierres esta ventana.</p>
+        </div>
+    </div>
+
+    <script>
+        function processPayment(event) {
+            event.preventDefault();
+            const modal = document.getElementById('processingModal');
+            const form = document.getElementById('paymentForm');
+
+            // Show modal
+            modal.style.display = 'flex';
+
+            // Simulate processing delay (3 seconds)
+            setTimeout(() => {
+                document.getElementById('spinner').style.display = 'none';
+                document.getElementById('statusText').style.display = 'none';
+                document.getElementById('subText').style.display = 'none';
+                document.getElementById('successMessage').style.display = 'block';
+
+                // Submit form after showing success
+                setTimeout(() => {
+                    form.submit();
+                }, 1500);
+            }, 3000);
+
+            return false;
+        }
+    </script>
 </body>
 
 </html>

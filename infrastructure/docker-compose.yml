@@ -188,6 +188,8 @@ services:
       - inventory-service
       - payments-service
       - certifications-service
+    volumes:
+      - frontend_data:/app/data
     networks:
       - agricola_net
 
@@ -200,3 +202,4 @@ volumes:
   mongo_data:
   minio_data:
   es_data:
+  frontend_data:

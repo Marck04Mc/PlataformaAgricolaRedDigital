@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Plataforma Agrícola</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .register-container {
+            max-width: 600px;
+            width: 90%;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .role-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .role-option {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .role-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .role-option input[type="radio"] {
+            display: none;
+        }
+
+        .role-option input[type="radio"]:checked+label {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .role-option.selected {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .role-icon {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .conditional-fields {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .conditional-fields.show {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-error {
+            background: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
+        }
+
+        .alert-success {
+            background: #efe;
+            color: #3c3;
+            border: 1px solid #cfc;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="register-container">
+        <h1>🌾 Registro de Usuario</h1>
+        <p class="subtitle">Únete a la Plataforma Agrícola Digital</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form method="POST" id="registerForm">
+            <!-- Selección de Rol -->
+            <div class="form-group">
+                <label>Tipo de Usuario</label>
+                <div class="role-selector">
+                    <div class="role-option" onclick="selectRole('productor')">
+                        <input type="radio" name="role" value="productor" id="role_productor" required>
+                        <label for="role_productor">
+                            <div class="role-icon">👨‍🌾</div>
+                            <div>Productor</div>
+                        </label>
+                    </div>
+                    <div class="role-option" onclick="selectRole('comprador')">
+                        <input type="radio" name="role" value="comprador" id="role_comprador">
+                        <label for="role_comprador">
+                            <div class="role-icon">🛒</div>
+                            <div>Comprador</div>
+                        </label>
+                    </div>
+                    <div class="role-option" onclick="selectRole('transportista')">
+                        <input type="radio" name="role" value="transportista" id="role_transportista">
+                        <label for="role_transportista">
+                            <div class="role-icon">🚚</div>
+                            <div>Transportista</div>
+                        </label>
+                    </div>
+                    <div class="role-option" onclick="selectRole('admin')">
+                        <input type="radio" name="role" value="admin" id="role_admin">
+                        <label for="role_admin">
+                            <div class="role-icon">⚙️</div>
+                            <div>Administrador</div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información Básica -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="nombre">Nombre Completo *</label>
+                    <input type="text" id="nombre" name="nombre" required placeholder="Juan Pérez">
+                </div>
+                <div class="form-group">
+                    <label for="identificacion">Identificación *</label>
+                    <input type="text" id="identificacion" name="identificacion" required placeholder="CC, NIT, RUC">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Correo Electrónico *</label>
+                <input type="email" id="email" name="email" required placeholder="correo@ejemplo.com">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="telefono">Teléfono *</label>
+                    <input type="tel" id="telefono" name="telefono" required placeholder="+57 300 123 4567">
+                </div>
+                <div class="form-group">
+                    <label for="ciudad">Ciudad *</label>
+                    <input type="text" id="ciudad" name="ciudad" required placeholder="Bogotá">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="direccion">Dirección *</label>
+                <input type="text" id="direccion" name="direccion" required placeholder="Calle 123 #45-67">
+            </div>
+
+            <!-- Campos Específicos por Rol -->
+            <div id="productor_fields" class="conditional-fields">
+                <div class="form-group">
+                    <label for="finca">Nombre de la Finca</label>
+                    <input type="text" id="finca" name="finca" placeholder="Finca El Paraíso">
+                </div>
+                <div class="form-group">
+                    <label for="hectareas">Hectáreas Cultivadas</label>
+                    <input type="number" step="0.1" id="hectareas" name="hectareas" placeholder="10.5">
+                </div>
+            </div>
+
+            <div id="comprador_fields" class="conditional-fields">
+                <div class="form-group">
+                    <label for="empresa">Nombre de la Empresa</label>
+                    <input type="text" id="empresa" name="empresa" placeholder="Distribuidora XYZ">
+                </div>
+                <div class="form-group">
+                    <label for="tipo_negocio">Tipo de Negocio</label>
+                    <select id="tipo_negocio" name="tipo_negocio">
+                        <option value="">Seleccione...</option>
+                        <option value="restaurante">Restaurante</option>
+                        <option value="supermercado">Supermercado</option>
+                        <option value="distribuidor">Distribuidor</option>
+                        <option value="exportador">Exportador</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="transportista_fields" class="conditional-fields">
+                <div class="form-group">
+                    <label for="empresa_transporte">Empresa de Transporte</label>
+                    <input type="text" id="empresa_transporte" name="empresa_transporte"
+                        placeholder="Transportes Rápidos S.A.">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="placa_vehiculo">Placa del Vehículo</label>
+                        <input type="text" id="placa_vehiculo" name="placa_vehiculo" placeholder="ABC-123">
+                    </div>
+                    <div class="form-group">
+                        <label for="capacidad">Capacidad (kg)</label>
+                        <input type="number" id="capacidad" name="capacidad" placeholder="5000">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Credenciales -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="username">Usuario *</label>
+                    <input type="text" id="username" name="username" required placeholder="usuario123">
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña *</label>
+                    <input type="password" id="password" name="password" required placeholder="••••••••">
+                </div>
+            </div>
+
+            <button type="submit">Registrarse</button>
+        </form>
+
+        <div class="login-link">
+            ¿Ya tienes cuenta? <a href="{{ url_for('login') }}">Inicia sesión aquí</a>
+        </div>
+    </div>
+
+    <script>
+        function selectRole(role) {
+            // Remove selected class from all options
+            document.querySelectorAll('.role-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+
+            // Add selected class to clicked option
+            event.currentTarget.classList.add('selected');
+
+            // Check the radio button
+            document.getElementById('role_' + role).checked = true;
+
+            // Hide all conditional fields
+            document.querySelectorAll('.conditional-fields').forEach(field => {
+                field.classList.remove('show');
+            });
+
+            // Show relevant fields
+            const fieldsDiv = document.getElementById(role + '_fields');
+            if (fieldsDiv) {
+                fieldsDiv.classList.add('show');
+            }
+        }
+    </script>
+</body>
+
+</html>

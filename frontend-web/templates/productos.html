@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Productos</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
@@ -19,31 +20,87 @@
             <a href="/pagos">💳 Pagos</a>
             <a href="/certificaciones">🏆 Certificaciones</a>
         </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
         <div class="card">
             <h2>Registrar Nuevo Producto</h2>
             <form method="POST" action="/productos/crear">
                 <div class="form-group">
-                    <label>Nombre</label>
-                    <input type="text" name="nombre" required>
+                    <label>Nombre del Producto</label>
+                    <input type="text" name="nombre" required placeholder="Ej: Maíz Amarillo">
                 </div>
                 <div class="form-group">
                     <label>Descripción</label>
-                    <textarea name="descripcion" rows="3" required></textarea>
+                    <textarea name="descripcion" rows="3" required
+                        placeholder="Describe el producto, su calidad, origen, etc."></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Precio (COP)</label>
-                    <input type="number" name="precio" step="0.01" required>
+                    <label>URL de Imagen</label>
+                    <input type="url" name="imagenUrl" placeholder="https://ejemplo.com/imagen-producto.jpg" required>
+                    <small style="color: #666; font-size: 0.9em;">Pega el enlace de una imagen del producto</small>
                 </div>
                 <div class="form-group">
-                    <label>Cantidad (kg)</label>
-                    <input type="number" name="cantidad" step="0.01" required>
+                    <label>Precio (por kg)</label>
+                    <input type="number" step="0.01" name="precio" required placeholder="0.00">
                 </div>
                 <div class="form-group">
-                    <label>ID del Productor</label>
-                    <input type="text" name="productorId" required>
+                    <label>Cantidad Disponible (kg)</label>
+                    <input type="number" step="0.01" name="cantidad" required placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label>Identificación del Productor</label>
+                    <input type="text" name="productorIdentificacion" required placeholder="Ej: 1234567890">
+                    <small style="color: #666; font-size: 0.9em;">Ingresa el número de identificación del
+                        productor</small>
                 </div>
                 <button type="submit">Registrar Producto</button>
             </form>
+        </div>
+
+        <div class="card">
+            <h2>Lista de Productos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Imagen</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Productor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for producto in productos %}
+                    <tr>
+                        <td>
+                            {% if producto.imagenUrl %}
+                            <img src="{{ producto.imagenUrl }}" alt="{{ producto.nombre }}"
+                                style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                            {% else %}
+                            🌱
+                            {% endif %}
+                        </td>
+                        <td>{{ producto.nombre }}</td>
+                        <td>{{ producto.descripcion }}</td>
+                        <td>${{ producto.precio }}</td>
+                        <td>{{ producto.cantidadDisponible }} kg</td>
+                        <td>{{ producto.productorNombre }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6">No hay productos registrados</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </body>

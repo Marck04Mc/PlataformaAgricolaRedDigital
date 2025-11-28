@@ -17,8 +17,10 @@ public class RegistrarProductoUseCase {
     }
 
     @Transactional
-    public void ejecutar(String nombre, String descripcion, double precio, double cantidad, UUID productorId) {
-        ProductoAgricola producto = new ProductoAgricola(UUID.randomUUID(), nombre, descripcion, precio, cantidad, productorId);
+    public void ejecutar(String nombre, String descripcion, String imagenUrl, double precio, double cantidad,
+            UUID productorId) {
+        ProductoAgricola producto = new ProductoAgricola(UUID.randomUUID(), nombre, descripcion, imagenUrl, precio,
+                cantidad, productorId);
         repository.save(producto);
     }
 }

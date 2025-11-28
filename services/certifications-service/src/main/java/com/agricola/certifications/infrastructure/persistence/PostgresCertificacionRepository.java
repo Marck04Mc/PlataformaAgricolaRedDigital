@@ -5,8 +5,10 @@ import com.agricola.certifications.domain.repository.CertificacionRepository;
 import com.agricola.certifications.infrastructure.persistence.entity.CertificacionEntity;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Repository
 public class PostgresCertificacionRepository implements CertificacionRepository {
@@ -20,24 +22,34 @@ public class PostgresCertificacionRepository implements CertificacionRepository 
     @Override
     public void save(Certificacion certificacion) {
         CertificacionEntity entity = new CertificacionEntity(
-            certificacion.getId(),
-            certificacion.getProductorId(),
-            certificacion.getTipo(),
-            certificacion.getUrlDocumento(),
-            certificacion.getEstado()
-        );
+                certificacion.getId(),
+                certificacion.getProductorId(),
+                certificacion.getTipo(),
+                certificacion.getUrlDocumento(),
+                certificacion.getEstado());
         jpaRepository.save(entity);
     }
 
     @Override
     public Optional<Certificacion> findById(UUID id) {
         return jpaRepository.findById(id)
-            .map(entity -> new Certificacion(
-                entity.getId(),
-                entity.getProductorId(),
-                entity.getTipo(),
-                entity.getUrlDocumento(),
-                entity.getEstado()
-            ));
+                .map(entity -> new Certificacion(
+                        entity.getId(),
+                        entity.getProductorId(),
+                        entity.getTipo(),
+                        entity.getUrlDocumento(),
+                        entity.getEstado()));
+    }
+
+    @Override
+    public List<Certificacion> findAll() {
+        return jpaRepository.findAll().stream()
+                .map(entity -> new Certificacion(
+                        entity.getId(),
+                        entity.getProductorId(),
+                        entity.getTipo(),
+                        entity.getUrlDocumento(),
+                        entity.getEstado()))
+                .collect(Collectors.toList());
     }
 }

@@ -5,8 +5,10 @@ import com.agricola.trading.domain.repository.ContratoRepository;
 import com.agricola.trading.infrastructure.persistence.entity.ContratoEntity;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Repository
 public class PostgresContratoRepository implements ContratoRepository {
@@ -20,23 +22,29 @@ public class PostgresContratoRepository implements ContratoRepository {
     @Override
     public void save(Contrato contrato) {
         ContratoEntity entity = new ContratoEntity(
-            contrato.getId(),
-            contrato.getProductorId(),
-            contrato.getCompradorId(),
-            contrato.getTerminos(),
-            contrato.getEstado()
-        );
+                contrato.getId(),
+                contrato.getProductorId(),
+                contrato.getCompradorId(),
+                contrato.getTerminos(),
+                contrato.getEstado());
         jpaRepository.save(entity);
     }
 
     @Override
     public Optional<Contrato> findById(UUID id) {
         return jpaRepository.findById(id)
-            .map(entity -> new Contrato(
-                entity.getId(),
-                entity.getProductorId(),
-                entity.getCompradorId(),
-                entity.getTerminos()
-            ));
+                .map(entity -> new Contrato(
+                        entity.getId(),
+                        entity.getProductorId(),
+                        entity.getCompradorId(),
+                        entity.getTerminos()));
+    }
+
+    @Override
+    public List<Contrato> findAll() {
+        return jpaRepository.findAll().stream()
+                .map(entity -> new Contrato(entity.getId(), entity.getProductorId(), entity.getCompradorId(),
+                        entity.getTerminos()))
+                .collect(Collectors.toList());
     }
 }

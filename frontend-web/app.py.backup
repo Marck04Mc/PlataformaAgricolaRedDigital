@@ -1,0 +1,446 @@
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash, session
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from functools import wraps
+import requests
+import os
+from models import init_db, get_user_by_username, get_user_by_id, verify_password, create_user
+
+app = Flask(__name__)
+app.secret_key = 'plataforma-agricola-secret-key-2024'
+
+# Initialize Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+# Initialize database
+init_db()
+
+@login_manager.user_loader
+def load_user(user_id):
+    return get_user_by_id(int(user_id))
+
+# Role-based access decorator
+def role_required(*roles):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if not current_user.is_authenticated:
+                return redirect(url_for('login'))
+            if current_user.role not in roles:
+                flash('No tienes permisos para acceder a esta página', 'error')
+                return redirect(url_for('index'))
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
+
+# Microservices URLs
+SERVICES = {
+    'producers': os.getenv('PRODUCERS_URL', 'http://producers-service:8081/api/productores'),
+    'trading': os.getenv('TRADING_URL', 'http://trading-service:8082/api/contratos'),
+    'logistics': os.getenv('LOGISTICS_URL', 'http://logistics-service:8083/api/envios'),
+    'inventory': os.getenv('INVENTORY_URL', 'http://inventory-service:8084/api/productos'),
+    'payments': os.getenv('PAYMENTS_URL', 'http://payments-service:8085/api/pagos'),
+    'certifications': os.getenv('CERTIFICATIONS_URL', 'http://certifications-service:8086/api/certificaciones')
+}
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        
+        if verify_password(username, password):
+            user = get_user_by_username(username)
+            login_user(user)
+            flash('¡Bienvenido!', 'success')
+            
+            # Redirect based on role
+            if user.role == 'productor':
+                return redirect(url_for('dashboard_productor'))
+            elif user.role == 'comprador':
+                return redirect(url_for('dashboard_comprador'))
+            elif user.role == 'transportista':
+                return redirect(url_for('dashboard_transportista'))
+            elif user.role == 'admin':
+                return redirect(url_for('dashboard_admin'))
+            else:
+                return redirect(url_for('index'))
+        else:
+            flash('Usuario o contraseña incorrectos', 'error')
+    
+    return render_template('login.html')
+
+@app.route('/dashboard/productor')
+@login_required
+@role_required('admin', 'productor')
+def dashboard_productor():
+    # Fetch summary data
+    try:
+        productos = requests.get(SERVICES['inventory'], timeout=2).json()
+    except: productos = []
+    
+    try:
+        contratos = requests.get(SERVICES['trading'], timeout=2).json()
+    except: contratos = []
+    
+    try:
+        envios = requests.get(SERVICES['logistics'], timeout=2).json()
+    except: envios = []
+    
+    try:
+        certificaciones = requests.get(SERVICES['certifications'], timeout=2).json()
+    except: certificaciones = []
+
+    return render_template('dashboard_productor.html', 
+                         productos=productos, 
+                         contratos=contratos, 
+                         envios=envios, 
+                         certificaciones=certificaciones)
+
+@app.route('/dashboard/comprador')
+@login_required
+@role_required('admin', 'comprador')
+def dashboard_comprador():
+    # Fetch summary data
+    try:
+        contratos = requests.get(SERVICES['trading'], timeout=2).json()
+    except: contratos = []
+    
+    try:
+        envios = requests.get(SERVICES['logistics'], timeout=2).json()
+    except: envios = []
+    
+    try:
+        pagos = requests.get(SERVICES['payments'], timeout=2).json()
+    except: pagos = []
+
+    return render_template('dashboard_comprador.html', 
+                         contratos=contratos, 
+                         envios=envios, 
+                         pagos=pagos)
+
+@app.route('/marketplace')
+@login_required
+@role_required('admin', 'comprador')
+def marketplace():
+    try:
+        productos = requests.get(SERVICES['inventory'], timeout=2).json()
+    except: productos = []
+    
+    return render_template('marketplace.html', productos=productos)
+
+@app.route('/marketplace/comprar/<producto_id>')
+@login_required
+@role_required('admin', 'comprador')
+def comprar_producto(producto_id):
+    try:
+        # 1. Get product details
+        producto_response = requests.get(f"{SERVICES['inventory']}/{producto_id}", timeout=5)
+        if producto_response.status_code != 200:
+            flash('Producto no encontrado', 'error')
+            return redirect(url_for('marketplace'))
+        
+        producto = producto_response.json()
+        
+        # 2. Verify stock availability (at least 1 kg)
+        if producto.get('cantidadDisponible', 0) < 1:
+            flash('Producto sin stock disponible', 'error')
+            return redirect(url_for('marketplace'))
+        
+        # 3. Create contract (Trading Service)
+        # For simplicity, we'll buy 1 kg. In a real app, user would specify quantity
+        cantidad_compra = 1.0
+        contrato_data = {
+            'productorId': producto['productorId'],
+            'compradorId': current_user.id,  # Assuming user ID is stored
+            'terminos': f"Compra de {cantidad_compra}kg de {producto['nombre']} a ${producto['precio']}/kg"
+        }
+        
+        contrato_response = requests.post(SERVICES['trading'], json=contrato_data, timeout=5)
+        if contrato_response.status_code != 200:
+            flash('Error al crear el contrato', 'error')
+            return redirect(url_for('marketplace'))
+        
+        # Assuming the contract response contains the contract ID
+        # For now, we'll generate a UUID since we don't know the exact response structure
+        import uuid
+        contrato_id = str(uuid.uuid4())
+        
+        # 4. Create payment (Payments Service)
+        monto_total = producto['precio'] * cantidad_compra
+        pago_data = {
+            'contratoId': contrato_id,
+            'monto': monto_total,
+            'metodoPago': 'TARJETA_CREDITO'
+        }
+        
+        pago_response = requests.post(SERVICES['payments'], json=pago_data, timeout=5)
+        if pago_response.status_code != 200:
+            flash('Error al procesar el pago', 'error')
+            return redirect(url_for('marketplace'))
+        
+        # 5. Store purchase info in session for payment gateway
+        session['pending_purchase'] = {
+            'producto_id': producto_id,
+            'cantidad': cantidad_compra,
+            pass 
+    except: envios = []
+    
+    # Calculate stats
+    pendientes = len([e for e in envios if e.get('estado') == 'PENDIENTE'])
+    entregados = len([e for e in envios if e.get('estado') == 'ENTREGADO'])
+
+    return render_template('dashboard_transportista.html', 
+                         envios=envios,
+                         envios_pendientes=pendientes,
+                         envios_entregados=entregados)
+
+@app.route('/dashboard/admin')
+@login_required
+@role_required('admin')
+def dashboard_admin():
+    # Fetch all data
+    try: productos = requests.get(SERVICES['inventory'], timeout=2).json()
+    except: productos = []
+    
+    try: contratos = requests.get(SERVICES['trading'], timeout=2).json()
+    except: contratos = []
+    
+    try: envios = requests.get(SERVICES['logistics'], timeout=2).json()
+    except: envios = []
+    
+    try: pagos = requests.get(SERVICES['payments'], timeout=2).json()
+    except: pagos = []
+    
+    try: certificaciones = requests.get(SERVICES['certifications'], timeout=2).json()
+    except: certificaciones = []
+
+    return render_template('dashboard_admin.html', 
+                         productos=productos, 
+                         contratos=contratos, 
+                         envios=envios, 
+                         pagos=pagos,
+                         certificaciones=certificaciones)
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        role = request.form.get('role', 'productor')
+        
+        # Collect additional fields
+        additional_fields = {
+            'nombre': request.form.get('nombre'),
+            'identificacion': request.form.get('identificacion'),
+            'telefono': request.form.get('telefono'),
+            'ciudad': request.form.get('ciudad'),
+            'direccion': request.form.get('direccion'),
+            'finca': request.form.get('finca'),
+            'hectareas': request.form.get('hectareas'),
+            'empresa': request.form.get('empresa'),
+            'tipo_negocio': request.form.get('tipo_negocio'),
+            'empresa_transporte': request.form.get('empresa_transporte'),
+            'placa_vehiculo': request.form.get('placa_vehiculo'),
+            'capacidad': request.form.get('capacidad')
+        }
+        
+        if create_user(username, email, password, role, **additional_fields):
+            flash('Usuario registrado exitosamente. Por favor inicia sesión.', 'success')
+            return redirect(url_for('login'))
+        else:
+            flash('El usuario o email ya existe', 'error')
+    
+    return render_template('register.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('Sesión cerrada exitosamente', 'success')
+    return redirect(url_for('login'))
+
+@app.route('/')
+@login_required
+def index():
+    return render_template('index.html')
+
+@app.route('/productores')
+@login_required
+@role_required('admin', 'productor')
+def productores():
+    try:
+        response = requests.get(SERVICES['producers'], timeout=5)
+        productores = response.json() if response.status_code == 200 else []
+    except:
+        productores = []
+    return render_template('productores.html', productores=productores)
+
+@app.route('/productores/crear', methods=['POST'])
+@login_required
+@role_required('admin', 'productor')
+def crear_productor():
+    data = {
+        'nombre': request.form['nombre'],
+        'identificacion': request.form['identificacion']
+    }
+    try:
+        requests.post(SERVICES['producers'], json=data, timeout=5)
+        flash('Productor registrado exitosamente', 'success')
+    except:
+        flash('Error al registrar productor', 'error')
+    return redirect(url_for('productores'))
+
+@app.route('/contratos')
+@login_required
+@role_required('admin', 'productor', 'comprador')
+def contratos():
+    try:
+        response = requests.get(SERVICES['trading'], timeout=5)
+        contratos = response.json() if response.status_code == 200 else []
+    except:
+        contratos = []
+    return render_template('contratos.html', contratos=contratos)
+
+@app.route('/contratos/crear', methods=['POST'])
+@login_required
+@role_required('admin', 'productor', 'comprador')
+def crear_contrato():
+    data = {
+        'productorId': request.form['productorId'],
+        'compradorId': request.form['compradorId'],
+        'terminos': request.form['terminos']
+    }
+    try:
+        requests.post(SERVICES['trading'], json=data, timeout=5)
+        flash('Contrato creado exitosamente', 'success')
+    except:
+        flash('Error al crear contrato', 'error')
+    return redirect(url_for('contratos'))
+
+@app.route('/envios')
+@login_required
+@role_required('admin', 'transportista', 'comprador')
+def envios():
+    try:
+        response = requests.get(SERVICES['logistics'], timeout=5)
+        envios = response.json() if response.status_code == 200 else []
+    except:
+        envios = []
+    return render_template('envios.html', envios=envios)
+
+@app.route('/envios/crear', methods=['POST'])
+@login_required
+@role_required('admin', 'transportista')
+def crear_envio():
+    data = {
+        'pedidoId': request.form['pedidoId'],
+        'transportistaId': request.form['transportistaId']
+    }
+    try:
+        requests.post(SERVICES['logistics'], json=data, timeout=5)
+        flash('Envío registrado exitosamente', 'success')
+    except:
+        flash('Error al registrar envío', 'error')
+    return redirect(url_for('envios'))
+
+@app.route('/envios/actualizar/<id>', methods=['POST'])
+@login_required
+@role_required('admin', 'transportista')
+def actualizar_envio(id):
+    nuevo_estado = request.form['nuevoEstado']
+    try:
+        # Note: This endpoint needs to be implemented in Logistics Service
+        requests.put(f"{SERVICES['logistics']}/{id}", json={'estado': nuevo_estado}, timeout=5)
+        flash('Estado del envío actualizado', 'success')
+    except:
+        flash('Error al actualizar estado', 'error')
+    return redirect(url_for('envios'))
+
+@app.route('/productos')
+@login_required
+def productos():
+    try:
+        response = requests.get(SERVICES['inventory'], timeout=5)
+        productos = response.json() if response.status_code == 200 else []
+    except:
+        productos = []
+    return render_template('productos.html', productos=productos)
+
+@app.route('/productos/crear', methods=['POST'])
+@login_required
+@role_required('admin', 'productor')
+def crear_producto():
+    data = {
+        'nombre': request.form['nombre'],
+        'descripcion': request.form['descripcion'],
+        'imagenUrl': request.form['imagenUrl'],
+        'precio': float(request.form['precio']),
+        'cantidadDisponible': float(request.form['cantidad']),
+        'productorId': request.form['productorId']
+    }
+    try:
+        requests.post(SERVICES['inventory'], json=data, timeout=5)
+        flash('Producto registrado exitosamente', 'success')
+    except:
+        flash('Error al registrar producto', 'error')
+    return redirect(url_for('productos'))
+
+@app.route('/pagos')
+@login_required
+@role_required('admin', 'comprador')
+def pagos():
+    try:
+        response = requests.get(SERVICES['payments'], timeout=5)
+        pagos = response.json() if response.status_code == 200 else []
+    except:
+        pagos = []
+    return render_template('pagos.html', pagos=pagos)
+
+@app.route('/pagos/crear', methods=['POST'])
+@login_required
+@role_required('admin', 'comprador')
+def crear_pago():
+    data = {
+        'contratoId': request.form['contratoId'],
+        'monto': float(request.form['monto']),
+        'metodoPago': request.form['metodoPago']
+    }
+    try:
+        requests.post(SERVICES['payments'], json=data, timeout=5)
+        flash('Pago procesado exitosamente', 'success')
+    except:
+        flash('Error al procesar pago', 'error')
+    return redirect(url_for('pagos'))
+
+@app.route('/certificaciones')
+@login_required
+@role_required('admin', 'productor')
+def certificaciones():
+    try:
+        response = requests.get(SERVICES['certifications'], timeout=5)
+        certificaciones = response.json() if response.status_code == 200 else []
+    except:
+        certificaciones = []
+    return render_template('certificaciones.html', certificaciones=certificaciones)
+
+@app.route('/certificaciones/crear', methods=['POST'])
+@login_required
+@role_required('admin', 'productor')
+def crear_certificacion():
+    data = {
+        'productorId': request.form['productorId'],
+        'tipo': request.form['tipo'],
+        'urlDocumento': request.form['urlDocumento']
+    }
+    try:
+        requests.post(SERVICES['certifications'], json=data, timeout=5)
+        flash('Certificación registrada exitosamente', 'success')
+    except:
+        flash('Error al registrar certificación', 'error')
+    return redirect(url_for('certificaciones'))
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)

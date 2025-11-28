@@ -1,31 +1,57 @@
 package com.agricola.logistics.domain.model;
 
-import com.agricola.shared.domain.AggregateRoot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Envio extends AggregateRoot<UUID> {
+public class Envio {
+    private String id;
     private UUID pedidoId;
     private UUID transportistaId;
-    private String estado; // PENDIENTE, EN_TRANSITO, ENTREGADO
-    private List<PuntoControl> historialUbicacion;
+    private String estado;
+    private List<String> historialUbicacion;
 
-    public Envio(UUID id, UUID pedidoId, UUID transportistaId) {
-        super(id);
+    public Envio(String id, UUID pedidoId, UUID transportistaId) {
+        this.id = id;
         this.pedidoId = pedidoId;
         this.transportistaId = transportistaId;
         this.estado = "PENDIENTE";
         this.historialUbicacion = new ArrayList<>();
     }
 
-    public void registrarUbicacion(double latitud, double longitud, double temperatura) {
-        this.historialUbicacion.add(new PuntoControl(latitud, longitud, temperatura));
+    public Envio(String id, UUID pedidoId, UUID transportistaId, String estado, List<String> historialUbicacion) {
+        this.id = id;
+        this.pedidoId = pedidoId;
+        this.transportistaId = transportistaId;
+        this.estado = estado;
+        this.historialUbicacion = historialUbicacion;
     }
 
-    // Getters
-    public UUID getPedidoId() { return pedidoId; }
-    public UUID getTransportistaId() { return transportistaId; }
-    public String getEstado() { return estado; }
-    public List<PuntoControl> getHistorialUbicacion() { return new ArrayList<>(historialUbicacion); }
+    public void actualizarUbicacion(String ubicacion) {
+        this.historialUbicacion.add(ubicacion);
+    }
+
+    public void cambiarEstado(String nuevoEstado) {
+        this.estado = nuevoEstado;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public UUID getPedidoId() {
+        return pedidoId;
+    }
+
+    public UUID getTransportistaId() {
+        return transportistaId;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public List<String> getHistorialUbicacion() {
+        return historialUbicacion;
+    }
 }

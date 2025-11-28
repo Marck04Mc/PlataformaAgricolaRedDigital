@@ -3,22 +3,124 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Envíos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trazabilidad de Envíos - Plataforma Agrícola</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .timeline-container {
+            margin-top: 20px;
+        }
+
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #e0e0e0;
+            z-index: 0;
+        }
+
+        .timeline-step {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            background: white;
+            padding: 0 10px;
+        }
+
+        .step-icon {
+            width: 35px;
+            height: 35px;
+            background: #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .step-active .step-icon {
+            background: #2ecc71;
+        }
+
+        .step-label {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .step-active .step-label {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        .shipment-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #667eea;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .status-PENDIENTE {
+            background: #f1c40f;
+            color: white;
+        }
+
+        .status-EN_TRANSITO {
+            background: #3498db;
+            color: white;
+        }
+
+        .status-ENTREGADO {
+            background: #2ecc71;
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>🚚 Gestión de Envíos</h1>
+        <h1>🚚 Trazabilidad de Envíos</h1>
+
         <div class="nav">
-            <a href="/">🏠 Inicio</a>
-            <a href="/productores">👨‍🌾 Productores</a>
-            <a href="/contratos">📝 Contratos</a>
-            <a href="/envios">🚚 Envíos</a>
-            <a href="/productos">📦 Productos</a>
-            <a href="/pagos">💳 Pagos</a>
-            <a href="/certificaciones">🏆 Certificaciones</a>
+            {% if current_user.role == 'productor' %}
+            <a href="/dashboard/productor">⬅ Volver al Dashboard</a>
+            {% elif current_user.role == 'comprador' %}
+            <a href="/dashboard/comprador">⬅ Volver al Dashboard</a>
+            {% else %}
+            <a href="/">⬅ Volver al Inicio</a>
+            {% endif %}
         </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <!-- Formulario de Creación (Solo Productor/Transportista) -->
+        {% if current_user.role in ['admin', 'transportista'] %}
         <div class="card">
             <h2>Registrar Nuevo Envío</h2>
             <form method="POST" action="/envios/crear">
@@ -28,10 +130,69 @@
                 </div>
                 <div class="form-group">
                     <label>ID del Transportista</label>
-                    <input type="text" name="transportistaId" required>
+                    <input type="text" name="transportistaId" required
+                        value="{{ current_user.id if current_user.role == 'transportista' else '' }}">
                 </div>
                 <button type="submit">Registrar Envío</button>
             </form>
+        </div>
+        {% endif %}
+
+        <!-- Lista de Envíos con Trazabilidad -->
+        <div class="card">
+            <h2>Envíos Activos</h2>
+
+            {% for envio in envios %}
+            <div class="shipment-card">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                    <div>
+                        <h3>Envío #{{ envio.id }}</h3>
+                        <p><strong>Pedido:</strong> {{ envio.pedidoId }} | <strong>Transportista:</strong> {{
+                            envio.transportistaId }}</p>
+                    </div>
+                    <div>
+                        <span class="status-badge status-{{ envio.estado }}">{{ envio.estado }}</span>
+                    </div>
+                </div>
+
+                <!-- Línea de Tiempo Visual -->
+                <div class="timeline">
+                    <div
+                        class="timeline-step {% if envio.estado in ['PENDIENTE', 'EN_TRANSITO', 'ENTREGADO'] %}step-active{% endif %}">
+                        <div class="step-icon">1</div>
+                        <div class="step-label">Empacado</div>
+                    </div>
+                    <div
+                        class="timeline-step {% if envio.estado in ['EN_TRANSITO', 'ENTREGADO'] %}step-active{% endif %}">
+                        <div class="step-icon">2</div>
+                        <div class="step-label">En Tránsito</div>
+                    </div>
+                    <div class="timeline-step {% if envio.estado == 'ENTREGADO' %}step-active{% endif %}">
+                        <div class="step-icon">3</div>
+                        <div class="step-label">Entregado</div>
+                    </div>
+                </div>
+
+                <!-- Acciones de Actualización (Solo Transportista) -->
+                {% if current_user.role in ['admin', 'transportista'] %}
+                <div style="text-align: right;">
+                    <form method="POST" action="/envios/actualizar/{{ envio.id }}" style="display: inline;">
+                        <select name="nuevoEstado" style="padding: 5px; border-radius: 5px;">
+                            <option value="PENDIENTE" {% if envio.estado=='PENDIENTE' %}selected{% endif %}>Pendiente
+                            </option>
+                            <option value="EN_TRANSITO" {% if envio.estado=='EN_TRANSITO' %}selected{% endif %}>En
+                                Tránsito</option>
+                            <option value="ENTREGADO" {% if envio.estado=='ENTREGADO' %}selected{% endif %}>Entregado
+                            </option>
+                        </select>
+                        <button type="submit" style="padding: 5px 15px; font-size: 0.9em;">Actualizar Estado</button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+            <p style="text-align: center; color: #999; padding: 20px;">No hay envíos registrados.</p>
+            {% endfor %}
         </div>
     </div>
 </body>

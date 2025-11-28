@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Certificaciones</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
@@ -19,6 +20,15 @@
             <a href="/pagos">💳 Pagos</a>
             <a href="/certificaciones">🏆 Certificaciones</a>
         </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
         <div class="card">
             <h2>Registrar Nueva Certificación</h2>
             <form method="POST" action="/certificaciones/crear">
@@ -28,13 +38,7 @@
                 </div>
                 <div class="form-group">
                     <label>Tipo de Certificación</label>
-                    <select name="tipo" required>
-                        <option value="">Seleccione...</option>
-                        <option value="ORGANICO">Orgánico</option>
-                        <option value="COMERCIO_JUSTO">Comercio Justo</option>
-                        <option value="RAINFOREST">Rainforest Alliance</option>
-                        <option value="GLOBAL_GAP">Global GAP</option>
-                    </select>
+                    <input type="text" name="tipo" required>
                 </div>
                 <div class="form-group">
                     <label>URL del Documento</label>
@@ -42,6 +46,34 @@
                 </div>
                 <button type="submit">Registrar Certificación</button>
             </form>
+        </div>
+
+        <div class="card">
+            <h2>Certificaciones Registradas</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Productor</th>
+                        <th>Tipo</th>
+                        <th>Documento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cert in certificaciones %}
+                    <tr>
+                        <td>{{ cert.id }}</td>
+                        <td>{{ cert.productorId }}</td>
+                        <td>{{ cert.tipo }}</td>
+                        <td><a href="{{ cert.urlDocumento }}" target="_blank">Ver Documento</a></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4">No hay certificaciones registradas</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </body>

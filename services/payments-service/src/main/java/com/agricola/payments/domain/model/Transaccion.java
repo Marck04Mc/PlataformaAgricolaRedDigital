@@ -18,8 +18,23 @@ public class Transaccion extends AggregateRoot<UUID> {
     }
 
     // Getters
-    public UUID getContratoId() { return contratoId; }
-    public double getMonto() { return monto; }
-    public String getEstado() { return estado; }
-    public String getMetodoPago() { return metodoPago; }
+    public UUID getContratoId() {
+        return contratoId;
+    }
+
+    public double getMonto() {
+        return monto;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public String getMetodoPago() {
+        return metodoPago;
+    }
+
+    public void cambiarEstado(String nuevoEstado) {
+        this.estado = nuevoEstado;
+    }
 }

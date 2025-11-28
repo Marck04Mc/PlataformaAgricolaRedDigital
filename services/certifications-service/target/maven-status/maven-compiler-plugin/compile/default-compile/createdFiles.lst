@@ -8,3 +8,4 @@ com\agricola\certifications\infrastructure\api\CertificationController$Registrar
 com\agricola\certifications\infrastructure\api\CertificationController.class
 com\agricola\certifications\infrastructure\persistence\entity\CertificacionEntity.class
 com\agricola\certifications\infrastructure\persistence\JpaCertificacionRepository.class
+com\agricola\certifications\infrastructure\api\CertificationController$CertificacionResponse.class

@@ -20,6 +20,15 @@
             <a href="/pagos">💳 Pagos</a>
             <a href="/certificaciones">🏆 Certificaciones</a>
         </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
         <div class="card">
             <h2>Crear Nuevo Contrato</h2>
             <form method="POST" action="/contratos/crear">
@@ -37,6 +46,34 @@
                 </div>
                 <button type="submit">Crear Contrato</button>
             </form>
+        </div>
+
+        <div class="card">
+            <h2>Lista de Contratos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Productor</th>
+                        <th>Comprador</th>
+                        <th>Términos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contrato in contratos %}
+                    <tr>
+                        <td>{{ contrato.id }}</td>
+                        <td>{{ contrato.productorId }}</td>
+                        <td>{{ contrato.compradorId }}</td>
+                        <td>{{ contrato.terminos }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4">No hay contratos registrados</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </body>
